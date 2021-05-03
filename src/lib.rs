@@ -7,16 +7,18 @@
 
 use core::panic::PanicInfo;
 
+pub mod gdt;
+pub mod interrupts;
 pub mod serial;
 pub mod vga_buffer;
-pub mod interrupts;
 
 pub trait Testable {
     fn run(&self) -> ();
 }
 
 impl<T> Testable for T
-    where T: Fn(),
+where
+    T: Fn(),
 {
     fn run(&self) {
         serial_print!("{}...\t", core::any::type_name::<T>());
@@ -77,5 +79,6 @@ fn trivial_assertion() {
 }
 
 pub fn init() {
+    gdt::init();
     interrupts::init_idt();
 }
